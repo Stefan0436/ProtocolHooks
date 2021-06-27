@@ -12,6 +12,7 @@ buildscript {
 
 plugins {
 	id 'java'
+	id 'maven-publish'
 }
 
 sourceCompatibility = '1.11'
@@ -20,10 +21,11 @@ targetCompatibility = '1.11'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.asf.cyan.cornflower'
+apply from: "asf.mvn.publish.gradle"
 
 // Project information
 group="org.asf.mods"
-version="1.0"
+version="1.1"
 
 // Automatically assigned
 def mod_id = "hooks"
@@ -65,6 +67,7 @@ Protocol Hooks - Set of events binding the minecraft server packet handlers with
 
 For ''' + "$gameVersion."
 
+def protocolHooksVersion = project.version
 version = "$project.version-$gameVersion".toString()
 
 
@@ -91,6 +94,10 @@ task runManifest() {
 	}
 }
 createEclipseLaunches.dependsOn runManifest
+
+repositories {
+    mavenCentral()
+}
 
 // Instructs Cyan to load the coremod in the debug enviroment
 project.afterEvaluate {
@@ -235,7 +242,7 @@ task ctcPublish(type: CtcUtil, dependsOn: ctcPack) {
 	}
 
 	method publish
-	destination connectiveHttpURLScheme("https://aerialworks.ddns.net/", mod_group, mod_id, project.version, mod_group + " " + mod_id + " Main Trust")
+	destination connectiveHttpURLScheme("https://aerialworks.ddns.net/", mod_group, mod_id, project.version, "Main Trust " + mod_id + " " + mod_group)
 
 	//
 	// Publishing credentials are needed for the ASF server
@@ -351,13 +358,17 @@ processResources {
 }
 
 task javaDocs(type: Javadoc) {
+    title "Enhanced ModKit Specification $protocolHooksVersion"
 	classpath = sourceSets.main.runtimeClasspath
 	source = sourceSets.main.allJava
 	exclude "**/internal/**"
+	exclude "**/org/asf/mods/**"
 }
 
 javadoc {
+    title "Enhanced ModKit Specification $protocolHooksVersion"
 	exclude "**/internal/**"
+	exclude "**/org/asf/mods/**"
 }
 
 task javadocJar(type: Jar, dependsOn: 'javaDocs') {
@@ -387,3 +398,30 @@ ctc.finalizedBy ctcPack
 ctcPack.dependsOn ctc
 ctcPack.finalizedBy cmf
 cmf.dependsOn ctcPack
+
+configurePublish {
+	pretty_name "ProtocolHooks"
+	description "$modDescription"
+	page "https://aerialworks.ddns.net/maven"
+	address "https://aerialworks.ddns.net/maven"
+	
+	license {
+		license_name "Cyan Coremodding License"
+	}
+	
+	author {
+		name "AerialWorks Software Foundation"
+		id "ASF"
+	}
+	
+	artifact {
+		name project.name
+		artifact_version "${project.version}"
+		task tasks.cmf
+		task tasks.jar
+		task tasks.sourcesJar
+		task tasks.javadocJar
+	}
+}
+
+initializeASFMVNPublish()
