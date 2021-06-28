@@ -12,7 +12,6 @@ import org.asf.cyan.mods.events.AttachEvent;
 @TargetModloader(value = Modloader.class, any = true)
 public class ProtocolHooksCoremod extends AbstractCoremod {
 
-	// TODO: server startup event
 	// TODO: scoreboards
 	// TODO: custom levels
 	// TODO: asynchronous level loading

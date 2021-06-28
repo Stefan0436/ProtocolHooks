@@ -6,7 +6,9 @@ import org.asf.cyan.mods.events.SimpleEvent;
 import modkit.enhanced.events.chat.ChatEvent;
 import modkit.enhanced.events.objects.chat.ChatEventObject;
 import modkit.enhanced.events.objects.player.PlayerJoinEventObject;
+import modkit.enhanced.events.objects.server.ServerEventObject;
 import modkit.enhanced.events.player.PlayerJoinEvent;
+import modkit.enhanced.events.server.ServerStartupEvent;
 import modkit.enhanced.player.titles.MinecraftTitle;
 import modkit.enhanced.player.titles.TitleIntervalConfiguration;
 import modkit.enhanced.player.titles.TitleType;
@@ -26,6 +28,11 @@ public class TestEvents implements IEventListenerContainer {
 		title.addComponent(TitleType.SUBTITLE, Colors.LIGHT_BLUE + "Subtitle test");
 		title.setIntervalConfiguration(TitleIntervalConfiguration.create(40, 140, 40));
 		event.getPlayer().showTitle(title);
+	}
+	
+	@SimpleEvent(ServerStartupEvent.class)
+	public void startup(ServerEventObject event) {
+		event = event;
 	}
 
 	@SimpleEvent(PlayerJoinEvent.class)
