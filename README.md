@@ -188,8 +188,25 @@ String sha1HEX(byte[] array) throws NoSuchAlgorithmException {
 // ...
 dependencies {
     // ...
-
-    implementation group: 'org.asf.mods', name: 'ProtocolHooks', version: protocolHooksVersion + "-" + gameVersion
+    
+    //
+    // ProtocolHooks Dependency'
+    //
+    // Mod.byId() streams the '/<modgroup>/<modid>/mod.artifacts.deps' file from a remote trust server
+    // Cyan's Cornflower plugin adds the dependencies noted in that file to gradle.
+    //
+    // In this case, Cornflower streams from the following URL:
+    // https://aerialworks.ddns.net/cyan/trust/download/protocol/hooks/mod.artifacts.deps
+    //
+    // As a mod developer, you can set this up for your own mods by writing an identical ccfg file.
+    // After writing your dependencies, add a 'group' statement, something like: 'group> org.example'
+    // Also add a 'modid' statement such as: 'modid> examplecoremod'
+    //
+    // You can upload the document to the ASF trust server by using the following command:
+    // curl -X POST --data-binary @request.ccfg https://aerialworks.ddns.net/cyan/trust/set-mod-depfile -u "insert-moddev-username-here"
+    // (this command requires a moddev account, see the cyan coremodkit for more information on how to configure mod trust)
+    //
+    implementation Mod.byId("protocol:hooks", protocolHooksVersion + "-" + gameVersion)
 
     // ...
 }
