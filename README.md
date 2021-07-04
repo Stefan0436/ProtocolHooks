@@ -207,7 +207,7 @@ dependencies {
     // (this command requires a moddev account, see the cyan coremodkit for more information on how to configure mod trust)
     //
     //
-    // Use the protocol hooks dependency:
+    // Protocol hooks dependency one-liner:
     implementation Mod.byId("protocol:hooks", protocolHooksVersion + "-" + gameVersion)
 
     // ...
