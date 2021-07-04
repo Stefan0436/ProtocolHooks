@@ -206,6 +206,8 @@ dependencies {
     // curl -X POST --data-binary @request.ccfg https://aerialworks.ddns.net/cyan/trust/set-mod-depfile -u "insert-moddev-username-here"
     // (this command requires a moddev account, see the cyan coremodkit for more information on how to configure mod trust)
     //
+    //
+    // Use the protocol hooks dependency:
     implementation Mod.byId("protocol:hooks", protocolHooksVersion + "-" + gameVersion)
 
     // ...
