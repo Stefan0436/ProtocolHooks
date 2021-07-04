@@ -117,6 +117,8 @@ project.afterEvaluate {
         if (hashRemote != null && !hashRemote.equals(hash)) {
             URL prHooksMvn = new URL(urlBase)
             InputStream strm = prHooksMvn.openStream()
+            if (!protocolHooksCCMF.getParentFile().exists())
+                protocolHooksCCMF.getParentFile().mkdirs()
             FileOutputStream strmOut = new FileOutputStream(protocolHooksCCMF)
             strm.transferTo(strmOut)
             strmOut.close()
@@ -143,8 +145,6 @@ project.afterEvaluate {
         try {
             URL hashUrl = new URL(urlBase + ".sha1")
             InputStream strmH = hashUrl.openStream()
-            if (!protocolHooksCCMF.getParentFile().exists())
-                protocolHooksCCMF.getParentFile().mkdirs()
             hashRemote = new String(strmH.readAllBytes())
             strmH.close()
         } catch (IOException e) {        
