@@ -115,8 +115,6 @@ project.afterEvaluate {
         }
 
         if (hashRemote != null && !hashRemote.equals(hash)) {
-            if (!protocolHooksCCMF.getParentFile().exists())
-                protocolHooksCCMF.getParentFile().mkdirs()
             URL prHooksMvn = new URL(urlBase)
             InputStream strm = prHooksMvn.openStream()
             FileOutputStream strmOut = new FileOutputStream(protocolHooksCCMF)
@@ -153,8 +151,6 @@ project.afterEvaluate {
         }
 
         if (hashRemote != null && !hashRemote.equals(hash)) {
-            if (!protocolHooksCCMF.getParentFile().exists())
-                protocolHooksCCMF.getParentFile().mkdirs()
             URL prHooksMvn = new URL(urlBase)
             InputStream strm = prHooksMvn.openStream()
             if (!protocolHooksCCMF.getParentFile().exists())
