@@ -60,128 +60,15 @@ After running the commands, you can import this project in the Eclipse IDE.
 
 <b>TIP:</b> you can add `-PoverrideGameVersion=<version>` to select a game version.
 
-### Developing mods with the ProtocolHooks coremods
+### Developing mods with the ProtocolHooks coremods (Cornflower 1.0.0.A47 or greater)
 <b>First, open your mod's `build.gradle` file and edit it as following:</b>
 ```groovy
 // File: build.gradle
 // ...
 
+
 // ProtocolHooks Version
 def protocolHooksVersion = "1.0"
-
-
-// Add ProtocolHooks to the debug run manifest
-// ...
-task runManifest() {
-    // ...
-
-    def conf = modfileManifest {
-        // ...
-
-        dependency "protocol:hooks", protocolHooksVersion + "-" + gameVersion
-
-        // ...
-    }
-
-    // ...
-}
-// ...
-
-
-// Download ProtocolHooks from maven into the run files
-// ...
-import java.nio.file.Files
-project.afterEvaluate {
-    createServerLaunch {
-        // ...
-
-        // Download ProtocolHooks into the run directory
-        File protocolHooksCCMF = new File(workingDir, ".cyan-data/coremods/protocolhooks.ccmf")
-
-        String urlBase = "https://aerialworks.ddns.net/maven/org/asf/mods/ProtocolHooks/" + protocolHooksVersion + "-" + gameVersion + "/ProtocolHooks-" + protocolHooksVersion + "-" + gameVersion + ".ccmf"
-        String hash = ""
-        String hashRemote = null
-
-        if (protocolHooksCCMF.exists()) {
-            hash = sha1HEX(Files.readAllBytes(protocolHooksCCMF.toPath()))
-        }
-
-        try {
-            URL hashUrl = new URL(urlBase + ".sha1")
-            InputStream strmH = hashUrl.openStream()
-            hashRemote = new String(strmH.readAllBytes())
-            strmH.close()
-        } catch (IOException e) {        
-        }
-
-        if (hashRemote != null && !hashRemote.equals(hash)) {
-            URL prHooksMvn = new URL(urlBase)
-            InputStream strm = prHooksMvn.openStream()
-            if (!protocolHooksCCMF.getParentFile().exists())
-                protocolHooksCCMF.getParentFile().mkdirs()
-            FileOutputStream strmOut = new FileOutputStream(protocolHooksCCMF)
-            strm.transferTo(strmOut)
-            strmOut.close()
-            strm.close()
-        }
-
-        // ...
-    }
-
-    createClientLaunch {
-        // ...
-
-        // Download ProtocolHooks into the run directory
-        File protocolHooksCCMF = new File(workingDir, ".cyan-data/coremods/protocolhooks.ccmf")
-
-        String urlBase = "https://aerialworks.ddns.net/maven/org/asf/mods/ProtocolHooks/" + protocolHooksVersion + "-" + gameVersion + "/ProtocolHooks-" + protocolHooksVersion + "-" + gameVersion + ".ccmf"
-        String hash = ""
-        String hashRemote = null
-
-        if (protocolHooksCCMF.exists()) {
-            hash = sha1HEX(Files.readAllBytes(protocolHooksCCMF.toPath()))
-        }
-
-        try {
-            URL hashUrl = new URL(urlBase + ".sha1")
-            InputStream strmH = hashUrl.openStream()
-            hashRemote = new String(strmH.readAllBytes())
-            strmH.close()
-        } catch (IOException e) {        
-        }
-
-        if (hashRemote != null && !hashRemote.equals(hash)) {
-            URL prHooksMvn = new URL(urlBase)
-            InputStream strm = prHooksMvn.openStream()
-            if (!protocolHooksCCMF.getParentFile().exists())
-                protocolHooksCCMF.getParentFile().mkdirs()
-            FileOutputStream strmOut = new FileOutputStream(protocolHooksCCMF)
-            strm.transferTo(strmOut)
-            strmOut.close()
-            strm.close()
-        }
-
-        // ...
-    }
-}
-// ...
-
-
-// Hash method
-// ...
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-String sha1HEX(byte[] array) throws NoSuchAlgorithmException {
-    MessageDigest digest = MessageDigest.getInstance("SHA-1");
-    byte[] sha = digest.digest(array);
-    StringBuilder result = new StringBuilder();
-    for (byte aByte : sha) {
-        result.append(String.format("%02x", aByte));
-    }
-    return result.toString();
-}
-// ...
 
 
 // Add ProtocolHooks to the dependencies block
@@ -189,44 +76,10 @@ String sha1HEX(byte[] array) throws NoSuchAlgorithmException {
 dependencies {
     // ...
     
-    //
-    // ProtocolHooks Dependency'
-    //
-    // Mod.byId() streams the '/<modgroup>/<modid>/mod.artifacts.deps' file from a remote trust server
-    // Cyan's Cornflower plugin adds the dependencies noted in that file to gradle.
-    //
-    // In this case, Cornflower streams from the following URL:
-    // https://aerialworks.ddns.net/cyan/trust/download/protocol/hooks/mod.artifacts.deps
-    //
-    // As a mod developer, you can set this up for your own mods by writing an identical ccfg file.
-    // After writing your dependencies, add a 'group' statement, something like: 'group> org.example'
-    // Also add a 'modid' statement such as: 'modid> examplecoremod'
-    //
-    // You can upload the document to the ASF trust server by using the following command:
-    // curl -X POST --data-binary @request.ccfg https://aerialworks.ddns.net/cyan/trust/set-mod-depfile -u "insert-moddev-username-here"
-    // (this command requires a moddev account, see the cyan coremodkit for more information on how to configure mod trust)
-    //
-    //
-    // Protocol hooks dependency one-liner:
+    // Protocol hooks dependency:
     implementation Mod.byId("protocol:hooks", protocolHooksVersion + "-" + gameVersion)
 
     // ...
-}
-// ...
-
-
-// Add ProtocolHooks to the CMF manifest
-// ...
-cmf {
-    manifest {
-        modfileManifest {
-            // ...
-
-            dependency "protocol:hooks", protocolHooksVersion + "-" + gameVersion
-
-            // ...
-        }
-    }
 }
 // ...
 ```
