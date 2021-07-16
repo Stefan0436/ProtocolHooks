@@ -1,0 +1,13 @@
+# CCFG document for the mod.artifacts.deps server file
+
+group> 'protocol'
+modid> 'hooks'
+
+# Dependency version statement
+dependencyVersion> '=~1\\.0-(%gvs)'
+
+artifacts> {
+    org.asf.mods> {
+        ProtocolHooks> '%mv'
+    }
+}

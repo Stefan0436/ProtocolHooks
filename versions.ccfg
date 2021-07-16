@@ -1,0 +1,53 @@
+# ProtocolHooks Version Document
+
+group> 'protocol'
+modid> 'hooks'
+
+# Channel names
+channels> {
+
+    @default> testing
+    
+    #stable> stable
+    #latest> latest
+    testing> testing
+    
+}
+
+# Chanel configuration
+channelFiles> {
+
+    @fallback> {
+        urls> {
+            @fallback> 'https://aerialworks.ddns.net/maven/org/asf/mods/ProtocolHooks/%v/ProtocolHooks-%v.cmf'
+        }
+    }
+
+    testing> {
+        versions> {
+            1.16.5> '1.0-1.16.5'
+            1.17> '1.0-1.17'
+            1.17.1> '1.0-1.17.1'
+        }
+    }
+
+#    
+#   latest> {
+#       versions> {
+#           1.16.5> '1.0-1.16.5'
+#           1.17> '1.0-1.17'
+#           1.17.1> '1.0-1.17.1'
+#       }
+#   }
+#    
+#
+#   stable> {
+#       versions> {
+#           1.16.5> '1.0-1.16.5'
+#           1.17> '1.0-1.17'
+#           1.17.1> '1.0-1.17.1'
+#       }
+#   }
+#
+
+}

@@ -6,7 +6,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'org.asf.cyan.cornflower:Cornflower:1.0.0.A46'
+		classpath 'org.asf.cyan.cornflower:Cornflower:1.0.0.A47'
 	}
 }
 
@@ -70,31 +70,6 @@ For ''' + "$gameVersion."
 def protocolHooksVersion = project.version
 version = "$project.version-$gameVersion".toString()
 
-
-// Mod Debugging Manifest
-task runManifest() {
-	def conf = modfileManifest {
-		modid mod_id
-		modgroup mod_group
-
-		mod_class mod_class_name
-		mod_package mod_package_name
-
-		display_name mod_display_name
-		mod_version project.version
-
-		mod_description modDescLanguageKey, modDescription
-	}
-	doLast {
-		File dest = new File("${project.buildDir}/run/mod.manifest.ccfg")
-		if (!dest.getParentFile().exists())
-			dest.getParentFile().mkdirs()
-
-		java.nio.file.Files.writeString(dest.toPath(), conf.toString());
-	}
-}
-createEclipseLaunches.dependsOn runManifest
-
 repositories {
     mavenCentral()
 }
@@ -102,17 +77,11 @@ repositories {
 // Instructs Cyan to load the coremod in the debug enviroment
 project.afterEvaluate {
 	createServerLaunch {
-		jvm "-DdebugModfileManifests=CM//${project.buildDir}/run/mod.manifest.ccfg";
-		jvm "-DauthorizeDebugPackages=${mod_package_name}";
 		jvm "-Ddebug.protocol.hooks=true";
-		classpath project;
 	}
 
 	createClientLaunch {
-		jvm "-DdebugModfileManifests=CM//${project.buildDir}/run/mod.manifest.ccfg";
-		jvm "-DauthorizeDebugPackages=${mod_package_name}";
 		jvm "-Ddebug.protocol.hooks=true";
-		classpath project;
 	}
 }
 
@@ -294,6 +263,9 @@ cmf {
 			maven_dependency remoteDependencies
 			trust_container tasks.ctcPack, "https://aerialworks.ddns.net/cyan/trust/download"
 
+            // Assigns the update server
+            updateserver "https://aerialworks.ddns.net/cyan/trust/download"
+            
 			//
 			// Add dependencies like this:
 			// dependency 'modgroup:modid', '>=greater-than-version'
