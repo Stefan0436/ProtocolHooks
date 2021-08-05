@@ -25,7 +25,7 @@ apply from: "asf.mvn.publish.gradle"
 
 // Project information
 group="org.asf.mods"
-version="1.0"
+version="1.1"
 
 // Automatically assigned
 def mod_id = "hooks"
@@ -35,7 +35,7 @@ def mod_group = "protocol"
 // Loader information
 def gameVersion = "1.17.1"
 def cyanVersion = "1.0.0.A14"
-def modkitVersion = "1.1"
+def modkitVersion = "1.2"
 
 if (project.hasProperty("overrideGameVersion"))
 	gameVersion = project.getProperty("overrideGameVersion")
@@ -176,6 +176,17 @@ platforms {
 	
 			// Forge version
 			modloader "36.1.35"
+		}
+		
+	} else if (gameVersion.startsWith("1.17.")) {
+		
+		// MCP Platform, for forge support
+		MCP {
+			// YYYYMMDD.HHMMSS, should match upstream forge
+			version "20210706.113038"
+	
+			// Forge version
+			modloader "37.0.25"
 		}
 		
 	}

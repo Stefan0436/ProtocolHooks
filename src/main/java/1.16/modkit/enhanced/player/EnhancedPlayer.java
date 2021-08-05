@@ -13,6 +13,9 @@ import modkit.enhanced.events.objects.chat.TitleEventObject;
 import modkit.enhanced.events.objects.movement.LevelSwitchEventObject;
 import modkit.enhanced.events.objects.movement.LevelTeleportationEventObject;
 import modkit.enhanced.events.objects.movement.TeleportationEventObject;
+import modkit.enhanced.events.objects.player.PlayerDamageEventObject;
+import modkit.enhanced.events.player.PlayerDamageEvent;
+import modkit.enhanced.events.player.PlayerDeathEvent;
 import modkit.enhanced.player.titles.MinecraftTitle;
 import modkit.enhanced.player.titles.MinecraftTitle.TitleComponent;
 import net.minecraft.network.chat.Component;
@@ -24,6 +27,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -108,6 +112,31 @@ public class EnhancedPlayer extends ServerPlayer implements IEnhancedPlayer {
 	@Override
 	public void removeCustomDisplayName() {
 		customDisplayName = null;
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		PlayerDamageEventObject obj = new PlayerDamageEventObject(source, server, this, -1f);
+		if (PlayerDeathEvent.getInstance().dispatch(obj).getResult() != EventResult.CANCEL)
+			super.die(source);
+		else
+			setHealth(0.5f);
+	}
+
+	@Override
+	public void actuallyHurt(DamageSource source, float damage) {
+		PlayerDamageEventObject obj = new PlayerDamageEventObject(source, server, this, damage);
+		if (PlayerDamageEvent.getInstance().dispatch(obj).getResult() != EventResult.CANCEL)
+			super.actuallyHurt(source, damage);
+	}
+
+	@Override
+	public boolean hurt(DamageSource source, float damage) {
+		PlayerDamageEventObject obj = new PlayerDamageEventObject(source, server, this, damage);
+		if (PlayerDamageEvent.getInstance().dispatch(obj).getResult() != EventResult.CANCEL)
+			return super.hurt(source, damage);
+		else
+			return false;
 	}
 
 	@Override
