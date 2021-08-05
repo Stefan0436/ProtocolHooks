@@ -119,8 +119,6 @@ public class EnhancedPlayer extends ServerPlayer implements IEnhancedPlayer {
 		PlayerDamageEventObject obj = new PlayerDamageEventObject(source, server, this, -1f);
 		if (PlayerDeathEvent.getInstance().dispatch(obj).getResult() != EventResult.CANCEL)
 			super.die(source);
-		else
-			setHealth(0.5f);
 	}
 
 	@Override
