@@ -6,7 +6,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'org.asf.cyan.cornflower:Cornflower:1.0.0.A47'
+		classpath 'org.asf.cyan.cornflower:Cornflower:1.0.0.A48'
 	}
 }
 
@@ -218,6 +218,11 @@ task ctcPack (type: CtcUtil, dependsOn: ctc) {
 
 task ctcPublish(type: CtcUtil, dependsOn: ctcPack) {
 	doFirst {
+        credentials {
+			type 'Bearer'
+			usergroup 'moddev'
+			bearer getAmasToken("https", "aerialworks.ddns.net", "moddev")		
+        }
 		source ctcPack.getOutput() // returns null if not called after ctcPack completes
 	}
 
