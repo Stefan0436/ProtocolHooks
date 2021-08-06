@@ -30,7 +30,7 @@ public class ServerPlayerClassHook extends ClassLoadHook {
 	public void apply(ClassNode cc, FluidClassPool cp, ClassLoader loader, Class<?> classBeingRedefined,
 			ProtectionDomain protectionDomain, byte[] classfileBuffer) throws ClassNotFoundException {
 		boolean edited = false;
-		if (cc.superName != null && !cc.superName.equals(EnhancedPlayer.class.getTypeName().replace(".", "/"))
+		if (cc.superName != null && !cc.name.equals(EnhancedPlayer.class.getTypeName().replace(".", "/"))
 				&& cc.superName.equals(ServerPlayer.class.getTypeName().replace(".", "."))) {
 			cc.superName = EnhancedPlayer.class.getTypeName().replace(".", "/");
 			edited = true;
