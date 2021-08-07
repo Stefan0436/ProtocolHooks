@@ -16,7 +16,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 public class ServerPlayerClassHook extends ClassLoadHook {
 
 	private static final String PerverPlayerDeobf = "net.minecraft.server.level.ServerPlayer";
-	private static final String EnhancedPlayer = " modkit.enhanced.player.EnhancedPlayer";
+	private static final String EnhancedPlayer = "modkit.enhanced.player.EnhancedPlayer";
 	
 	private static String ServerPlayer;
 
