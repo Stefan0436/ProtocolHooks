@@ -30,7 +30,7 @@ version="1.1"
 // Automatically assigned
 def mod_id = "hooks"
 def mod_group = "protocol"
-
+def buildVer = "2"
 
 // Loader information
 def gameVersion = "1.17.1"
@@ -261,7 +261,7 @@ cmf {
 
 			// Sets the version and name
 			display_name mod_display_name
-			mod_version project.version
+			mod_version project.version + (buildVer != null && !buildVer.isEmpty() ? "-build-" + buildVer : "")
 			
 			// Sets the game version
 			game_version gameVersion.replace(".", "\\."), "only " + gameVersion
@@ -410,6 +410,17 @@ configurePublish {
 		task tasks.sourcesJar
 		task tasks.javadocJar
 	}
+	
+	if (buildVer != null && !buildVer.isEmpty()) {
+        artifact {
+            name project.name
+            artifact_version "${project.version}-build-${buildVer}"
+            task tasks.cmf
+            task tasks.jar
+            task tasks.sourcesJar
+            task tasks.javadocJar
+        }
+    }
 }
 
 initializeASFMVNPublish()

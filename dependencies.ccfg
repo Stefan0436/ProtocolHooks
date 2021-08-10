@@ -4,7 +4,7 @@ group> 'protocol'
 modid> 'hooks'
 
 # Dependency version statement
-dependencyVersion> '~=[0-9](\\.[0-9])+-(%gvs)'
+dependencyVersion> '~=[0-9](\\.[0-9])+-(%gvs)(-build-[0-9]+)?'
 
 artifacts> {
     org.asf.mods> {
