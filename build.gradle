@@ -218,10 +218,12 @@ task ctcPack (type: CtcUtil, dependsOn: ctc) {
 
 task ctcPublish(type: CtcUtil, dependsOn: ctcPack) {
 	doFirst {
-        credentials {
-			type 'Bearer'
-			usergroup 'moddev'
-			bearer getAmasToken("https", "aerialworks.ddns.net", "moddev")		
+        if (!project.hasProperty("ctcusername") || !project.hasProperty("ctcpassword")) {
+            credentials {
+                type 'Bearer'
+                usergroup 'moddev'
+                bearer getAmasToken("https", "aerialworks.ddns.net", "moddev")		
+            }
         }
 		source ctcPack.getOutput() // returns null if not called after ctcPack completes
 	}
