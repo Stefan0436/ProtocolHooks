@@ -12,16 +12,13 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import org.asf.cyan.api.common.CyanComponent;
+import org.asf.cyan.minecraft.toolkits.mtk.MinecraftInstallationToolkit;
 import org.asf.cyan.mods.events.AttachEvent;
 import org.asf.cyan.mods.events.IEventListenerContainer;
-import org.asf.mods.protocol.hooks.ProtocolHooksCoremod;
 import org.asf.mods.protocol.hooks.config.IdForwardConfig;
-
-import modkit.config.ConfigManager;
 
 public class CommonEvents extends CyanComponent implements IEventListenerContainer {
 
-	private ConfigManager<ProtocolHooksCoremod> configManager;
 	public static IdForwardConfig idForwardConfiguration;
 
 	private static PublicKey pubKey;
@@ -63,8 +60,7 @@ public class CommonEvents extends CyanComponent implements IEventListenerContain
 
 	@AttachEvent("mods.preinit")
 	public void preInit() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-		configManager = ConfigManager.getFor(ProtocolHooksCoremod.class);
-		idForwardConfiguration = configManager.getConfiguration(IdForwardConfig.class);
+		idForwardConfiguration = new IdForwardConfig(MinecraftInstallationToolkit.getMinecraftDirectory());
 
 		if (!idForwardConfiguration.server.isEmpty()) {
 			info("Enabled IDForward, using BungeeCord mirror authentication server at " + idForwardConfiguration.server

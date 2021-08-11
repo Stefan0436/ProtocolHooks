@@ -1,21 +1,23 @@
 package org.asf.mods.protocol.hooks.config;
 
-import java.io.IOException;
-
+import java.io.File;
+import org.asf.cyan.api.config.Configuration;
 import org.asf.cyan.api.config.annotations.Comment;
-import org.asf.mods.protocol.hooks.ProtocolHooksCoremod;
 
-import modkit.config.ModConfiguration;
+public class IdForwardConfig extends Configuration<IdForwardConfig> {
 
-public class IdForwardConfig extends ModConfiguration<IdForwardConfig, ProtocolHooksCoremod> {
-
-	public IdForwardConfig(ProtocolHooksCoremod instance) throws IOException {
-		super(instance);
+	public IdForwardConfig(File folder) {
+		super(folder.getAbsolutePath());
 	}
 
 	@Override
 	public String filename() {
 		return "idforward.ccfg";
+	}
+
+	@Override
+	public String folder() {
+		return "config/protocol/hooks";
 	}
 
 	@Comment("The IDForward BungeeCord server IP (disabled if empty)")
