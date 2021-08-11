@@ -1,0 +1,4 @@
+name: IDForward
+main: org.asf.mods.idforward.bungee.IDForward
+version: 1.0.0.A1
+author: AerialWorks

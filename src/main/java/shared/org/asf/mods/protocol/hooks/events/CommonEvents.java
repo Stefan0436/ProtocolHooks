@@ -1,17 +1,78 @@
 package org.asf.mods.protocol.hooks.events;
 
-import modkit.events.ingame.level.ServerLevelLoadEvent;
-import modkit.events.objects.ingame.level.ServerLevelLoadEventObject;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
+import org.asf.cyan.api.common.CyanComponent;
+import org.asf.cyan.mods.events.AttachEvent;
 import org.asf.cyan.mods.events.IEventListenerContainer;
-import org.asf.cyan.mods.events.SimpleEvent;
+import org.asf.mods.protocol.hooks.ProtocolHooksCoremod;
+import org.asf.mods.protocol.hooks.config.IdForwardConfig;
 
-public class CommonEvents implements IEventListenerContainer {
+import modkit.config.ConfigManager;
 
-	@SimpleEvent(ServerLevelLoadEvent.class)
-	public void loadWorld(ServerLevelLoadEventObject event) {
-		// Called on world load,
-		// The example transformer is redundant, this event provides it.
+public class CommonEvents extends CyanComponent implements IEventListenerContainer {
+
+	private ConfigManager<ProtocolHooksCoremod> configManager;
+	public static IdForwardConfig idForwardConfiguration;
+
+	private static PublicKey pubKey;
+
+	public static boolean checkSignature(byte[] payload, byte[] signature) {
+		try {
+			Signature sig = Signature.getInstance("Sha256WithRSA");
+			sig.initVerify(pubKey);
+			sig.update(payload);
+			return sig.verify(signature);
+		} catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException e) {
+			return false;
+		}
+	}
+
+	private byte[] pemDecode(String PEM) {
+		String base64 = PEM;
+
+		while (base64.startsWith("-")) {
+			base64 = base64.substring(1);
+		}
+		while (!base64.startsWith("-")) {
+			base64 = base64.substring(1);
+		}
+		while (base64.startsWith("-")) {
+			base64 = base64.substring(1);
+		}
+
+		base64 = base64.replace("\n", "");
+		while (base64.endsWith("-"))
+			base64 = base64.substring(0, base64.length() - 1);
+		while (!base64.endsWith("-"))
+			base64 = base64.substring(0, base64.length() - 1);
+		while (base64.endsWith("-"))
+			base64 = base64.substring(0, base64.length() - 1);
+
+		return Base64.getDecoder().decode(base64);
+	}
+
+	@AttachEvent("mods.preinit")
+	public void preInit() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+		configManager = ConfigManager.getFor(ProtocolHooksCoremod.class);
+		idForwardConfiguration = configManager.getConfiguration(IdForwardConfig.class);
+
+		if (!idForwardConfiguration.server.isEmpty()) {
+			info("Enabled IDForward, using BungeeCord mirror authentication server at " + idForwardConfiguration.server
+					+ ":" + idForwardConfiguration.port);
+
+			KeyFactory fac = KeyFactory.getInstance("RSA");
+			pubKey = fac.generatePublic(new X509EncodedKeySpec(pemDecode(idForwardConfiguration.publicKey)));
+		}
 	}
 
 }

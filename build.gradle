@@ -30,7 +30,7 @@ version="1.1"
 // Automatically assigned
 def mod_id = "hooks"
 def mod_group = "protocol"
-def buildVer = "6"
+def buildVer = "7"
 
 // Loader information
 def gameVersion = "1.17.1"

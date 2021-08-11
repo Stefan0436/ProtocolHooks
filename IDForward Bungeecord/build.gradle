@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+	id 'maven-publish'
+}
+
+version = "1.0.0.A1"
+group = "org.asf.mods"
+
+def authorname = "AerialWorks Software Foundation"
+
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+	maven { name = "AerialWorks"; url = "https://aerialworks.ddns.net/maven" }
+	maven { name = "Bungee"; url = "https://oss.sonatype.org/content/repositories/snapshots" }
+    flatDir {
+       dirs 'libraries'
+   }
+}
+
+dependencies {
+    implementation group: 'net.md-5', name: 'bungeecord-api', version: '1.17-R0.1-SNAPSHOT'
+}
