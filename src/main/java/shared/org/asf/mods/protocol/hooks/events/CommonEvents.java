@@ -61,6 +61,7 @@ public class CommonEvents extends CyanComponent implements IEventListenerContain
 	@AttachEvent("mods.preinit")
 	public void preInit() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		idForwardConfiguration = new IdForwardConfig(MinecraftInstallationToolkit.getMinecraftDirectory());
+		idForwardConfiguration.readAll();
 
 		if (!idForwardConfiguration.server.isEmpty()) {
 			info("Enabled IDForward, using BungeeCord mirror authentication server at " + idForwardConfiguration.server
