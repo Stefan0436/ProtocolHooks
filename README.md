@@ -68,7 +68,7 @@ After running the commands, you can import this project in the Eclipse IDE.
 
 
 // ProtocolHooks Version
-def protocolHooksVersion = "1.1"
+def protocolHooksVersion = "1.2"
 
 
 // Add ProtocolHooks to the dependencies block
