@@ -1,6 +1,7 @@
 package org.asf.mods.protocol.hooks.transformers.network;
 
 import org.asf.mods.protocol.hooks.components.IdForwardComponent;
+import org.asf.cyan.api.events.extended.EventObject.EventResult;
 import org.asf.cyan.api.fluid.annotations.PlatformExclude;
 import org.asf.cyan.api.modloader.information.game.LaunchPlatform;
 import org.asf.cyan.fluid.api.FluidTransformer;
@@ -10,7 +11,10 @@ import org.asf.cyan.fluid.api.transforming.enums.InjectLocation;
 
 import com.mojang.authlib.GameProfile;
 
+import modkit.enhanced.events.objects.player.PlayerLoginEventObject;
+import modkit.enhanced.events.player.PlayerLoginEvent;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.login.ClientboundLoginDisconnectPacket;
 import net.minecraft.server.MinecraftServer;
 
 @FluidTransformer
@@ -27,6 +31,13 @@ public class ServerLoginPacketListenerModification {
 		gameProfile = IdForwardComponent.login(gameProfile, server, connection);
 		if (gameProfile == null)
 			return;
+
+		PlayerLoginEventObject phLoginEvent = new PlayerLoginEventObject(gameProfile, connection);
+		if (PlayerLoginEvent.getInstance().dispatch(phLoginEvent).getResult() == EventResult.CANCEL) {
+			connection.send(new ClientboundLoginDisconnectPacket(phLoginEvent.getDisconnectMessage()));
+			connection.disconnect(phLoginEvent.getDisconnectMessage());
+			return;
+		}
 	}
 
 }
