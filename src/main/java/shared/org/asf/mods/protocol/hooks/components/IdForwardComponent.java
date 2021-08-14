@@ -63,7 +63,7 @@ public class IdForwardComponent extends CyanComponent {
 						+ "Failed to authenticate you with the proxy server, please try again later.")));
 				connection.disconnect(new TextComponent(Colors.LIGHT_RED
 						+ "Failed to authenticate you with the proxy server, please try again later."));
-				return null;
+				return gameProfile;
 			}
 		}
 		return gameProfile;
