@@ -20,10 +20,10 @@ public class IdForwardConfig extends Configuration<IdForwardConfig> {
 		return "config/protocol/hooks";
 	}
 
-	@Comment("The IDForward BungeeCord server IP (disabled if empty)")
+	@Comment("The IDForward proxy server IP (disabled if empty)")
 	public String server = "";
 
-	@Comment("The IDForward BungeeCord HTTP port")
+	@Comment("The IDForward proxy HTTP port")
 	public int port = 8084;
 
 	@Comment("The server public key (stored in public.pem)")
