@@ -121,11 +121,16 @@ public class IDForward extends Plugin {
 				privKey = pair.getPrivate();
 				pubKey = pair.getPublic();
 
-				FileAttribute<?> permissions = PosixFilePermissions
-						.asFileAttribute(PosixFilePermissions.fromString("rw-------"));
-				Files.write(pubKeyFile.toPath(), pem(pubKey.getEncoded(), "PUBLIC").getBytes());
-				Files.write(Files.createFile(privKeyFile.toPath(), permissions),
-						pem(privKey.getEncoded(), "PRIVATE").getBytes());
+				try {
+					FileAttribute<?> permissions = PosixFilePermissions
+							.asFileAttribute(PosixFilePermissions.fromString("rw-------"));
+					Files.write(pubKeyFile.toPath(), pem(pubKey.getEncoded(), "PUBLIC").getBytes());
+					Files.write(Files.createFile(privKeyFile.toPath(), permissions),
+							pem(privKey.getEncoded(), "PRIVATE").getBytes());
+				} catch (Exception e) {
+					Files.write(pubKeyFile.toPath(), pem(pubKey.getEncoded(), "PUBLIC").getBytes());
+					Files.write(privKeyFile.toPath(), pem(privKey.getEncoded(), "PRIVATE").getBytes());
+				}
 			} catch (NoSuchAlgorithmException | IOException e) {
 				getLogger().severe(
 						"Failed to generate RSA keypair! " + e.getClass().getTypeName() + ": " + e.getMessage());

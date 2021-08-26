@@ -1,6 +1,7 @@
 package org.asf.mods.protocol.hooks.components;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -26,7 +27,11 @@ public class IdForwardComponent extends CyanComponent {
 		if (!CommonEvents.idForwardConfiguration.server.isEmpty()) {
 			UUID id = gameProfile.getId();
 			if (id == null)
-				id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameProfile.getName()).getBytes());
+				try {
+					id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameProfile.getName()).getBytes("UTF-8"));
+				} catch (UnsupportedEncodingException e1) {
+					id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameProfile.getName()).getBytes());
+				}
 
 			try {
 				URL authURL = new URL("http", CommonEvents.idForwardConfiguration.server,
@@ -40,7 +45,11 @@ public class IdForwardComponent extends CyanComponent {
 				JsonObject payload = new JsonObject();
 				payload.addProperty("uuid", gameProfile.getId().toString());
 				payload.addProperty("playername", gameProfile.getName());
-				conn.getOutputStream().write(payload.toString().getBytes());
+				try {
+					conn.getOutputStream().write(payload.toString().getBytes("UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					conn.getOutputStream().write(payload.toString().getBytes());
+				}
 				String response = new String(conn.getInputStream().readAllBytes());
 				conn.disconnect();
 

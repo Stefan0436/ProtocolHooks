@@ -1,5 +1,6 @@
 package org.asf.mods.idforward.bungee.commands;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Base64;
@@ -39,7 +40,12 @@ public class RequestPlayerCommand extends HttpUploadProcessor {
 		ProxyServer server = ProxyServer.getInstance();
 		for (ProxiedPlayer t : server.getPlayers()) {
 			UUID onlineUUID = t.getUniqueId();
-			UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + t.getName()).getBytes());
+			UUID offlineUUID;
+			try {
+				offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + t.getName()).getBytes("UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + t.getName()).getBytes());
+			}
 
 			if (name.equals(t.getName()) && uuid.equals(offlineUUID.toString())) {
 				JsonObject obj = new JsonObject();
@@ -53,7 +59,12 @@ public class RequestPlayerCommand extends HttpUploadProcessor {
 				else
 					obj.addProperty("address", "unknown");
 
-				byte[] payload = obj.toString().getBytes();
+				byte[] payload;
+				try {
+					payload = obj.toString().getBytes("UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					payload = obj.toString().getBytes();
+				}
 				obj.addProperty("signature", Base64.getEncoder()
 						.encodeToString(((IDForward) server.getPluginManager().getPlugin("IDForward")).sign(payload)));
 				setBody("application/json", obj.toString());
