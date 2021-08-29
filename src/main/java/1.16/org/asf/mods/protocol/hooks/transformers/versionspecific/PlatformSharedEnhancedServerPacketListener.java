@@ -29,11 +29,11 @@ public class PlatformSharedEnhancedServerPacketListener {
 	public void send(@TargetType(target = "net.minecraft.network.protocol.Packet") Packet<?> packet,
 			GenericFutureListener<? extends Future<? super Void>> future) {
 		if (packet instanceof ClientboundSetTitlesPacket) {
-			ClientboundSetTitlesPacket stPacket = (ClientboundSetTitlesPacket) packet;
-			if (stPacket.getType() == ClientboundSetTitlesPacket.Type.CLEAR
-					|| stPacket.getType() == ClientboundSetTitlesPacket.Type.RESET) {
+			TitlePacketExtender stPacket = (TitlePacketExtender) packet;
+			if (stPacket.phGetType() == ClientboundSetTitlesPacket.Type.CLEAR
+					|| stPacket.phGetType() == ClientboundSetTitlesPacket.Type.RESET) {
 				TitleClearEventObject cyanEvent = new TitleClearEventObject(
-						stPacket.getType() == ClientboundSetTitlesPacket.Type.RESET, server,
+						stPacket.phGetType() == ClientboundSetTitlesPacket.Type.RESET, server,
 						EnhancedPlayer.from(player));
 				EventResult result = TitleClearEvent.getInstance().dispatch(cyanEvent).getResult();
 				if (result == EventResult.CANCEL) {

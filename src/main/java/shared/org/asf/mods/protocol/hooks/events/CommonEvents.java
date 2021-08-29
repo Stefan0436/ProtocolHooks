@@ -64,8 +64,8 @@ public class CommonEvents extends CyanComponent implements IEventListenerContain
 		idForwardConfiguration.readAll();
 
 		if (!idForwardConfiguration.server.isEmpty()) {
-			info("Enabled IDForward, using BungeeCord mirror authentication server at " + idForwardConfiguration.server
-					+ ":" + idForwardConfiguration.port);
+			info("Enabled IDForward, using mirror authentication server at " + idForwardConfiguration.server + ":"
+					+ idForwardConfiguration.port);
 
 			KeyFactory fac = KeyFactory.getInstance("RSA");
 			pubKey = fac.generatePublic(new X509EncodedKeySpec(pemDecode(idForwardConfiguration.publicKey)));
